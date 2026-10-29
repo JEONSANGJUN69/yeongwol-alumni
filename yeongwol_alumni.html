@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>재경영월고총동창회 회원 주소록</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1612; --ink-light: #4a4540;
+  --paper: #faf8f4; --paper-warm: #f2ede4;
+  --accent: #7a4f2e; --accent-light: #c4956a;
+  --border: #d8d0c4;
+  --success: #2d6a4f; --success-bg: #e8f5ee;
+  --danger: #c0392b; --danger-bg: #fdf0ee;
+}
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--paper); color: var(--ink); }
+.nav { background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 52px; }
+.nav-brand { font-family: 'Noto Serif KR', serif; color: var(--accent-light); font-size: 1rem; }
+.nav-tabs { display: flex; gap: 0; }
+.nav-tab { padding: 0 18px; height: 52px; display: flex; align-items: center; color: #aaa; font-size: .85rem; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; }
+.nav-tab:hover { color: #fff; }
+.nav-tab.active { color: #fff; border-bottom-color: var(--accent-light); }
+.page { display: none; }
+.page.active { display: block; }
+.hero { background: var(--ink); color: var(--paper); padding: 2.5rem 1.5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,.015) 40px, rgba(255,255,255,.015) 80px); }
+.hero-badge { display: inline-block; font-family: 'Noto Serif KR', serif; font-size: 10px; color: var(--accent-light); border: 1px solid var(--accent-light); padding: 3px 14px; border-radius: 2px; margin-bottom: .6rem; letter-spacing: .2em; }
+.hero h1 { font-family: 'Noto Serif KR', serif; font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 700; line-height: 1.4; margin-bottom: .6rem; }
+.hero p { font-size: 13px; color: rgba(255,255,255,.55); letter-spacing: .25em; }
+.form-wrap { max-width: 540px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+.section-label { font-family: 'Noto Serif KR', serif; font-size: 10px; letter-spacing: .2em; color: var(--accent); text-transform: uppercase; margin: 1.8rem 0 .8rem; border-bottom: 1px solid var(--border); padding-bottom: 7px; }
+.field { margin-bottom: 1rem; }
+.field label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-light); margin-bottom: .4rem; font-weight: 500; }
+.field label .req { color: var(--accent); font-size: 11px; }
+.field label .opt { font-size: 10px; color: #aaa; border: 1px solid #ddd; border-radius: 3px; padding: 1px 5px; }
+.field input, .field select { width: 100%; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: inherit; background: #fff; color: var(--ink); transition: border-color .2s; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent-light); }
+.field input::placeholder { color: #bbb; }
+.btn-submit { width: 100%; padding: .9rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-size: 15px; font-family: 'Noto Serif KR', serif; font-weight: 700; letter-spacing: .05em; cursor: pointer; margin-top: 1.5rem; transition: background .2s; }
+.btn-submit:hover { background: var(--ink); }
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: .7rem 1.5rem; border-radius: 6px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 999; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+/* 관리자 */
+.admin-wrap { max-width: 800px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+.admin-login { max-width: 360px; margin: 3rem auto; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 2rem; text-align: center; }
+.admin-login h2 { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; margin-bottom: 1.2rem; color: var(--ink); }
+.admin-login input { width: 100%; padding: .7rem .9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-bottom: .8rem; }
+.admin-login button { width: 100%; padding: .75rem; background: var(--accent); color: #fff; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: .5rem; }
+.admin-header h2 { font-family: 'Noto Serif KR', serif; font-size: 1.1rem; }
+.btn-sm { padding: .4rem .9rem; font-size: 12px; border-radius: 5px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--ink); }
+.btn-sm.danger { border-color: var(--danger); color: var(--danger); }
+.search-bar { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.search-bar input { flex: 1; padding: .6rem .9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+.search-bar select { padding: .6rem .9rem; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+.member-count { font-size: 12px; color: #888; margin-bottom: .5rem; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--paper-warm); padding: .6rem .7rem; text-align: left; font-weight: 500; border-bottom: 2px solid var(--border); white-space: nowrap; }
+td { padding: .55rem .7rem; border-bottom: 1px solid var(--border); color: var(--ink-light); }
+tr:hover td { background: var(--paper-warm); }
+.btn-del { font-size: 11px; padding: .25rem .6rem; border: 1px solid var(--danger); color: var(--danger); background: none; border-radius: 4px; cursor: pointer; }
+.status-msg { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">재경영월고총동창회</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('register')">회원 등록</button>
+    <button class="nav-tab" onclick="showPage('admin')">관리자</button>
+  </div>
+</nav>
+
+<!-- 회원 등록 -->
+<div class="page active" id="page-register">
+  <div class="hero">
+    <div class="hero-badge">재경 영월고 동창회</div>
+    <h1>회원 주소록 등록</h1>
+    <p>아래 양식을 작성해 주시면 주소록에 등록됩니다.</p>
+  </div>
+  <div class="form-wrap">
+    <div class="section-label">필수 정보</div>
+    <div class="field">
+      <label>성함 <span class="req">*</span></label>
+      <input type="text" id="name" placeholder="홍길동">
+    </div>
+    <div class="field">
+      <label>휴대폰 번호 <span class="req">*</span></label>
+      <input type="tel" id="phone" placeholder="010-0000-0000">
+    </div>
+    <div class="field">
+      <label>기수 (입학년도) <span class="req">*</span></label>
+      <select id="grade">
+        <option value="">선택해 주세요</option>
+      </select>
+    </div>
+
+    <div class="section-label">선택 정보</div>
+    <div class="field">
+      <label>현재 거주지 주소 <span class="opt">선택</span></label>
+      <input type="text" id="address" placeholder="서울시 강남구 …">
+    </div>
+    <div class="field">
+      <label>직업 / 직장명 <span class="opt">선택</span></label>
+      <input type="text" id="job" placeholder="예: 부동산 중개업 / ○○공인중개사">
+    </div>
+    <div class="field">
+      <label>이메일 <span class="opt">선택</span></label>
+      <input type="email" id="email" placeholder="example@email.com">
+    </div>
+
+    <button class="btn-submit" onclick="submitForm()">주소록에 등록하기</button>
+  </div>
+</div>
+
+<!-- 관리자 -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <div id="admin-login-box" class="admin-login">
+      <h2>관리자 로그인</h2>
+      <input type="password" id="admin-pw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button onclick="adminLogin()">로그인</button>
+    </div>
+    <div id="admin-panel" style="display:none">
+      <div class="admin-header">
+        <h2>회원 목록</h2>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-sm" onclick="exportCSV()">CSV 내보내기</button>
+          <button class="btn-sm" onclick="adminLogout()">로그아웃</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="이름 또는 휴대폰 검색…" oninput="filterMembers()">
+        <select id="grade-filter" onchange="filterMembers()">
+          <option value="">전체 기수</option>
+        </select>
+      </div>
+      <div class="member-count" id="member-count"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>등록일</th><th>성함</th><th>휴대폰</th><th>기수</th><th>거주지</th><th>직업/직장</th><th>이메일</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="member-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxq5oRla-6DpqXRb-upr17khfhXenFwMQ8fPqV-oKKGSl71KNO6eUSlaRr6o1-J3W8yZQ/exec';
+let allMembers = [];
+let adminPw = '';
+
+// 기수 드롭다운 생성 (1회 1973년 ~ 51회 2023년)
+function buildGradeOptions() {
+  const sel = document.getElementById('grade');
+  const filterSel = document.getElementById('grade-filter');
+  for (let i = 1; i <= 51; i++) {
+    const year = 1972 + i;
+    const opt = document.createElement('option');
+    opt.value = `${i}회 (${year}년 입학)`;
+    opt.textContent = `${i}회 (${year}년 입학)`;
+    sel.appendChild(opt);
+
+    const fopt = document.createElement('option');
+    fopt.value = `${i}회 (${year}년 입학)`;
+    fopt.textContent = `${i}회`;
+    filterSel.appendChild(fopt);
+  }
+}
+buildGradeOptions();
+
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showToast(msg, ok=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = ok ? '#2d6a4f' : '#c0392b';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const grade = document.getElementById('grade').value;
+  if (!name || !phone || !grade) { showToast('필수 항목을 모두 입력해 주세요.', false); return; }
+
+  const data = {
+    name, phone, grade,
+    address: document.getElementById('address').value.trim(),
+    job: document.getElementById('job').value.trim(),
+    email: document.getElementById('email').value.trim()
+  };
+
+  try {
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+    const json = await res.json();
+    if (json.success) {
+      showToast('✓ 등록이 완료되었습니다!');
+      ['name','phone','address','job','email'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('grade').value = '';
+    } else {
+      showToast(json.message || '오류가 발생했습니다.', false);
+    }
+  } catch(e) {
+    showToast('서버 연결 오류. 잠시 후 다시 시도해 주세요.', false);
+  }
+}
+
+async function adminLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  if (!pw) return;
+  try {
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getMembers', password: pw }) });
+    const json = await res.json();
+    if (json.success) {
+      adminPw = pw;
+      allMembers = json.members;
+      document.getElementById('admin-login-box').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      renderMembers(allMembers);
+    } else {
+      showToast(json.message || '비밀번호가 틀렸습니다.', false);
+    }
+  } catch(e) {
+    showToast('서버 연결 오류.', false);
+  }
+}
+
+function adminLogout() {
+  adminPw = '';
+  allMembers = [];
+  document.getElementById('admin-login-box').style.display = 'block';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('admin-pw').value = '';
+}
+
+function filterMembers() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const g = document.getElementById('grade-filter').value;
+  const filtered = allMembers.filter(m => {
+    const matchQ = !q || String(m[1]).toLowerCase().includes(q) || String(m[2]).includes(q);
+    const matchG = !g || String(m[3]) === g;
+    return matchQ && matchG;
+  });
+  renderMembers(filtered);
+}
+
+function renderMembers(list) {
+  document.getElementById('member-count').textContent = `총 ${list.length}명`;
+  const tbody = document.getElementById('member-tbody');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="8" class="status-msg">회원 데이터가 없습니다.</td></tr>'; return; }
+  tbody.innerHTML = list.map(m => `
+    <tr>
+      <td>${m[0]||''}</td>
+      <td>${m[1]||''}</td>
+      <td>${m[2]||''}</td>
+      <td>${m[3]||''}</td>
+      <td>${m[4]||''}</td>
+      <td>${m[5]||''}</td>
+      <td>${m[6]||''}</td>
+      <td><button class="btn-del" onclick="deleteMember('${m[2]}')">삭제</button></td>
+    </tr>`).join('');
+}
+
+async function deleteMember(phone) {
+  if (!confirm(`${phone} 회원을 삭제하시겠습니까?`)) return;
+  try {
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteMember', password: adminPw, phone }) });
+    const json = await res.json();
+    if (json.success) {
+      allMembers = allMembers.filter(m => m[2] !== phone);
+      filterMembers();
+      showToast('삭제되었습니다.');
+    }
+  } catch(e) { showToast('오류 발생.', false); }
+}
+
+function exportCSV() {
+  if (!allMembers.length) { showToast('데이터가 없습니다.', false); return; }
+  const header = ['등록일','성함','휴대폰','기수','거주지','직업/직장','이메일'];
+  const rows = [header, ...allMembers.map(m => m.slice(0,7))];
+  const csv = '﻿' + rows.map(r => r.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = '재경영월고동창회_회원주소록.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
